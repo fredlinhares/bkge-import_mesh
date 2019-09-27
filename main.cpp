@@ -9,6 +9,7 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <boost/program_options.hpp>
+#include <glm/vec2.hpp> // glm::vec2
 #include <glm/vec3.hpp> // glm::vec3
 #include <glm/vec4.hpp> // glm::vec4
 
@@ -28,6 +29,7 @@ struct Vertex
 {
   glm::vec3 position;
   glm::vec3 normal;
+  glm::vec2 texture_coord;
 };
 
 void write_to_file(std::ofstream &output_file, const uint32_t &ui)
@@ -40,6 +42,12 @@ void write_to_file(std::ofstream &output_file, const glm::vec3 &vector)
   output_file.write((char*)&vector.x, sizeof(glm::vec3::value_type));
   output_file.write((char*)&vector.y, sizeof(glm::vec3::value_type));
   output_file.write((char*)&vector.z, sizeof(glm::vec3::value_type));
+}
+
+void write_to_file(std::ofstream &output_file, const glm::vec2 &vector)
+{
+  output_file.write((char*)&vector.x, sizeof(glm::vec2::value_type));
+  output_file.write((char*)&vector.y, sizeof(glm::vec2::value_type));
 }
 
 int main(int argc, char *argv[])
@@ -164,6 +172,9 @@ int main(int argc, char *argv[])
         vert.position.y = p_position->y;
         vert.position.z = p_position->z;
 
+        vert.texture_coord.x = p_texture_coord->x;
+        vert.texture_coord.y = p_texture_coord->y;
+
         vertexes.push_back(vert);
       }
 
@@ -233,6 +244,7 @@ int main(int argc, char *argv[])
       {
         write_to_file(output_file, vertex.position);
         write_to_file(output_file, vertex.normal);
+        write_to_file(output_file, vertex.texture_coord);
       }
     }
 
